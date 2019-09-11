@@ -3,7 +3,7 @@ import os
 import subprocess
 from spellchecker import SpellChecker
 from pprint import pprint
-
+import markdown
 
 # Fetch env variables
 # load_dotenv()
@@ -20,15 +20,21 @@ def cleanrepo():
 def scanrepo(path):
     for i in os.scandir(path):
         if i.is_file() and (i.path.endswith('.md') or i.path.endswith('.rst')):
-            readfile(i.path)
+            readfile(i.path, i.path.endswith('.md'))
         elif i.is_dir():
             scanrepo(i.path)
 
 
-def readfile(path):
+def readfile(path, ismarkdown):
     file = open(path)
     text = file.read()
-    pprint(text)
+
+    if ismarkdown:
+        print('MD')
+        html = markdown.markdown(text)
+        print(html)
+    else:
+        print('RST')
 
 
 def checkwords(words):
